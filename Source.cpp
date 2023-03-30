@@ -97,36 +97,38 @@ void loginUsername()
 		cout << "Input file failed to open.";
 		exit(1);
 	}
-	accountsFile.seekg(0,ios::beg);
+	
 	string tempUsername;
 	string tempPassword;
 	int lineNumber;
 	string userInput;
 
-		cout << "Input username: ";
-		getline(cin, userInput);
-		lineNumber = 0;
-		while (getline(accountsFile, tempUsername))
-		{
-			lineNumber++;
-			if (lineNumber % 2 == 1)
-				if (tempUsername == userInput)
+	cout << "Input username: ";
+	getline(cin, userInput);
+	lineNumber = 0;
+	accountsFile.seekg(0,ios::beg);
+	while (getline(accountsFile, tempUsername))
+	{
+		lineNumber++;
+		if (lineNumber % 2 == 1)
+			if (tempUsername == userInput)
+			{	
+				accountsFile.seekg(0, ios::beg);
+				for (int i = 1; i <= lineNumber + 1; i++)
 				{
-					for (int i = 1; i <= lineNumber + 1; i++)
-					{
-						getline(accountsFile, tempPassword);
-						cout << tempPassword;
-						cout << lineNumber;
-					}
-					loginPassword(tempPassword);
-					accountsFile.close();
-					exit(2);
+					getline(accountsFile, tempPassword);
+					cout << tempPassword;
+					cout << lineNumber;
 				}
+				loginPassword(tempPassword);
+				accountsFile.close();
+				exit(2);
+			}
 
-		}
-		cout << "User does not exist, try again.\n";
-		accountsFile.close();
-		loginUsername();
+	}
+	cout << "User does not exist, try again.\n";
+	accountsFile.close();
+	loginUsername();
 }
 
 void loginPassword(string tempPassword)
@@ -154,7 +156,7 @@ void incorrectPassword(string tempPassword)
 		"[3] Exit." << endl;
 
 	getChoice(choice, 3);
-
+	
 	switch (choice)
 	{
 	case 1:
