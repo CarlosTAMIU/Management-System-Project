@@ -12,6 +12,8 @@ void createAcc();
 void loginU();
 void loginP(int lineNum);
 
+bool usernameChecker(char username[]);
+
 int main()
 {
 	int userInput;
@@ -38,8 +40,6 @@ int main()
 
 void showMenu()
 {
-	
-
 	cout << "****************************************\n"
 		<< "Welcome, User." << endl
 		<< "[1] Create Account." << endl
@@ -54,27 +54,17 @@ void getChoice(int& choice)
 	cin >> choice;
 	if (!((1 <= choice) && (choice <= 3))) {
 		cout << "Invalid Choice, Please Select a Valid Option: ";
-		cin >> choice; }
+		cin >> choice;
+	}
 	cout << "\nYour Choice was " << choice << ": ";
 }
 
 void createAcc()
 {
 	char userInput[16];
-	int temp;
 
 	ofstream usernamesFile;
 	ofstream passwordsFile;
-	
-	ifstream totalAccIn;
-	ofstream totalAccOut;
-	
-	totalAccIn.open("accountnum.txt");
-	totalAccIn >> temp;
-	
-	
-	totalAccOut.open("accountnum.txt");
-	totalAccOut << temp + 1;
 
 	usernamesFile.open("usernames.txt", ios::app);
 	if (usernamesFile.fail())
@@ -85,43 +75,33 @@ void createAcc()
 
 	cout << "Input username (15 characters): ";
 	cin >> userInput;
-	
-    if(temp < 1)
-    {
-        usernamesFile << userInput;
-    }
+
+	if (usernameChecker(userInput))
+	{
+		usernamesFile << endl << userInput;
+
+		passwordsFile.open("passwords.txt", ios::app);
+		if (passwordsFile.fail())
+		{
+			cout << "Output file failed to open.";
+			exit(1);
+		}
+
+		cout << "Input password (15 characters): ";
+		cin >> userInput;
+
+		passwordsFile << endl << userInput;
+
+		usernamesFile.close();
+		passwordsFile.close();
+
+		cout << "Successfully created account." << endl;
+	}
 	else
 	{
-	    usernamesFile << endl << userInput;
+		cout << "\nThis username is taken, please try again.\n" << endl;
+		createAcc();
 	}
-
-	passwordsFile.open("passwords.txt", ios::app);
-	if (passwordsFile.fail())
-	{
-		cout << "Output file failed to open.";
-		exit(1);
-	}
-
-	cout << "Input password (15 characters): ";
-	cin >> userInput;
-
-    if(temp < 1)
-    {
-        passwordsFile << userInput;
-    }
-    else
-    {
-        passwordsFile << endl << userInput;
-    }
-
-	usernamesFile.close();
-	passwordsFile.close();
-	totalAccOut.close();
-	totalAccIn.close();
-
-	cout << "Successfully created account." << endl;
-	
-	//Call to main menu function
 }
 
 void loginU()
@@ -134,7 +114,7 @@ void loginU()
 	}
 
 	string tempUser;
-	int lineNumber = 0;
+	int lineNumber = 1;
 	char userInput[16];
 
 	cout << "Input username: ";
@@ -160,23 +140,23 @@ void loginU()
 void loginP(int lineNumber)
 {
 	ifstream passwordsFile("passwords.txt");
-	if(passwordsFile.fail())
+	if (passwordsFile.fail())
 	{
-	    cout<<"Input file failed to open.";
+		cout << "Input file failed to open.";
 	}
-	
+
 	string tempPass;
 	char passInput[16];
 	int choice;
-    
-    for (int i = 1; i <= lineNumber; i++)
-    {
-	   	getline(passwordsFile, tempPass);
+
+	for (int i = 1; i <= lineNumber; i++)
+	{
+		getline(passwordsFile, tempPass);
 	}
 
 	cout << "Input password: ";
 	cin >> passInput;
-	
+
 
 	if (passInput == tempPass)
 	{
@@ -210,4 +190,24 @@ void loginP(int lineNumber)
 			exit(1);
 		}
 	}
+}
+
+bool usernameChecker(char username[])
+{
+	string temp;
+	ifstream usernames("usernames.txt");
+	if (usernames.fail())
+	{
+		cout << "Username file failed to open." << endl;
+		exit(1);
+	}
+
+	while (getline(usernames, temp))
+	{
+		if (temp == username)
+		{
+			return 0;
+		}
+	}
+	return 1;
 }
