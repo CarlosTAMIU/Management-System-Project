@@ -25,6 +25,7 @@ int main()
 	{
 	case 1:
 		cout << "Create Account.\n";
+		cin.ignore();
 		createAcc();
 		break;
 	case 2:
@@ -53,9 +54,16 @@ void showMenu()
 void getChoice(int& choice, int limit)
 {
 	cin >> choice;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Invalid input. Please enter an integer: ";
+		cin >> choice;
+	}
 	while ((choice<1) || (limit<choice)) {
 		cout << "Invalid Choice, Please Select a Valid Option: ";
-		cin.ignore();
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		cin >> choice;
 	}
 	cout << "\nYour Choice was " << choice << ": ";
@@ -64,33 +72,55 @@ void getChoice(int& choice, int limit)
 void createAcc()
 {
 	ofstream accountsFile;
-	string userInput;
-
 	accountsFile.open("accounts.txt", ios::app);
 	if (accountsFile.fail())
 	{
 		cout << "Output file failed to open.";
 		exit(1);
 	}
-	
-	cout << "Input username (15 characters): ";
-	cin.ignore();
+	ifstream usernameCheck;
+	usernameCheck.open("accounts.txt");
+	if (usernameCheck.fail())
+	{
+		cout << "Input file failed to open.";
+		exit(1);
+	}
+
+	string userInput;
+	string tempUsername;
+	int lineNumber = 0;
+
+	cout << "Input username: ";
 	getline(cin, userInput);
+
+	usernameCheck.seekg(0, ios::beg);
+	while (getline(usernameCheck, tempUsername))
+	{
+		lineNumber++;
+		if (lineNumber % 2 == 1)
+			if (tempUsername == userInput)
+			{
+				cout << "\nThis username is already taken, please try again.\n";
+				accountsFile.close();
+				usernameCheck.close();
+				createAcc();
+			}
+	}
+	cout << userInput;
 	accountsFile << userInput << endl;
 
-	cout << "Input password (15 characters): ";
+	cout << "Input password: ";
 	getline(cin, userInput);
 	accountsFile << userInput << endl;
 
 	accountsFile.close();
-
+	usernameCheck.close();
 	cout << "Successfully created account." << endl;
 }
 
 void loginUsername()
 {
 	ifstream accountsFile;
-
 	accountsFile.open("accounts.txt");
 	if (accountsFile.fail())
 	{
@@ -100,12 +130,12 @@ void loginUsername()
 	
 	string tempUsername;
 	string tempPassword;
-	int lineNumber;
+	int lineNumber = 0;
 	string userInput;
 
 	cout << "Input username: ";
 	getline(cin, userInput);
-	lineNumber = 0;
+
 	accountsFile.seekg(0,ios::beg);
 	while (getline(accountsFile, tempUsername))
 	{
@@ -117,8 +147,6 @@ void loginUsername()
 				for (int i = 1; i <= lineNumber + 1; i++)
 				{
 					getline(accountsFile, tempPassword);
-					cout << tempPassword;
-					cout << lineNumber;
 				}
 				loginPassword(tempPassword);
 				accountsFile.close();
@@ -165,10 +193,30 @@ void incorrectPassword(string tempPassword)
 		break;
 	case 2:
 		cout << "Back.\n";
-		showMenu();
+		main();
 		break;
 	case 3:
 		cout << "Exit.\n";
 		exit(3);
 	}
+}
+
+bool usernameChecker(char username[])
+{
+	string temp;
+	ifstream usernames("usernames.txt");
+	if (usernames.fail())
+	{
+		cout << "Username file failed to open." << endl;
+		exit(1);
+	}
+
+	while (getline(usernames, temp))
+	{
+		if (temp == username)
+		{
+			return 0;
+		}
+	}
+	return 1;
 }
