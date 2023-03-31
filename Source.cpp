@@ -106,7 +106,6 @@ void createAcc()
 				createAcc();
 			}
 	}
-	cout << userInput;
 	accountsFile << userInput << endl;
 
 	cout << "Input password: ";
@@ -189,6 +188,7 @@ void incorrectPassword(string tempPassword)
 	{
 	case 1:
 		cout << "Try again.\n";
+		cin.ignore();
 		loginPassword(tempPassword);
 		break;
 	case 2:
@@ -197,26 +197,6 @@ void incorrectPassword(string tempPassword)
 		break;
 	case 3:
 		cout << "Exit.\n";
-		exit(3);
+		exit(2);
 	}
-}
-
-bool usernameChecker(char username[])
-{
-	string temp;
-	ifstream usernames("usernames.txt");
-	if (usernames.fail())
-	{
-		cout << "Username file failed to open." << endl;
-		exit(1);
-	}
-
-	while (getline(usernames, temp))
-	{
-		if (temp == username)
-		{
-			return 0;
-		}
-	}
-	return 1;
 }
