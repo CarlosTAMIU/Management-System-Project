@@ -25,12 +25,10 @@ int main()
 	{
 	case 1:
 		cout << "Create Account.\n";
-		cin.ignore();
 		createAcc();
 		break;
 	case 2:
 		cout << "Log In.\n";
-		cin.ignore();
 		loginUsername();
 		break;
 	case 3:
@@ -67,6 +65,7 @@ void getChoice(int& choice, int limit)
 		cin >> choice;
 	}
 	cout << "\nYour Choice was " << choice << ": ";
+	cin.ignore();
 }
 
 void createAcc()
@@ -188,7 +187,6 @@ void incorrectPassword(string tempPassword)
 	{
 	case 1:
 		cout << "Try again.\n";
-		cin.ignore();
 		loginPassword(tempPassword);
 		break;
 	case 2:
