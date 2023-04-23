@@ -1,0 +1,24 @@
+void getChoice(int& choice, int limit)
+{
+	cin >> choice;
+	
+	while (cin.fail()) 
+	{
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Invalid input. Please enter an integer: ";
+		cin >> choice;
+
+		if (!(cin.fail()))
+		if ((choice < 1) || (limit < choice)) 
+		{
+			cout << "Invalid Choice, Please Select a Valid Option: ";
+			cin.clear();
+			cin.ignore(100, '\n');
+			cin >> choice;
+		}
+	}
+	
+	cout << "\nYour Choice was " << choice << ": ";
+	cin.ignore();
+}
