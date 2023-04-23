@@ -13,6 +13,9 @@ void loginUsername();
 void loginPassword(string tempPassword);
 void incorrectPassword(string tempPassword);
 
+void adminCheck();
+
+
 int main()
 {
 	int userInput;
@@ -197,4 +200,33 @@ void incorrectPassword(string tempPassword)
 		cout << "Exit.\n";
 		exit(2);
 	}
+}
+
+void adminCheck()
+{
+	ifstream usernamesFile("accounts.txt");
+	if (usernamesFile.fail())
+	{
+		cout << "Input file failed to open.";
+		exit(4);
+	}
+
+	ofstream accountsFile("accounts.txt", ios::app);
+	if (accountsFile.fail())
+	{
+		cout << "Output file failed to open.";
+		exit(1);
+	}
+
+	string temp;
+
+	while (getline(usernamesFile, temp))
+	{
+		if (temp == "admin")
+		{
+			return;
+		}
+	}
+	accountsFile << "admin" << endl << "123456" << endl << "1";
+
 }
