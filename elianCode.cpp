@@ -15,6 +15,7 @@ void incorrectPassword(string tempPassword);
 
 void adminCheck();
 void sendMessages();
+string getUserName();
 
 int main()
 {
@@ -122,6 +123,8 @@ void createAcc()
 void loginUsername()
 {
 	ifstream accountsFile;
+	ofstream usernameSave ("temp.txt");
+	
 	accountsFile.open("accounts.txt");
 	if (accountsFile.fail())
 	{
@@ -144,6 +147,8 @@ void loginUsername()
 		if (lineNumber % 2 == 1)
 			if (tempUsername == userInput)
 			{	
+			    usernameSave << userInput;
+			    usernameSave.close();
 				accountsFile.seekg(0, ios::beg);
 				for (int i = 1; i <= lineNumber + 1; i++)
 				{
@@ -235,7 +240,7 @@ void sendMessages()
 {
     ifstream fin ("accounts.txt");
     ofstream fout;
-    string input, message, username;
+    string input, message, username, username2;
     int lineNumber = 0;
     
     cout << "Input the username of the reciever: ";
@@ -249,13 +254,15 @@ void sendMessages()
         {
             if(input == username)
             {
+                username2 = username;
                 username += ".txt";
                 fout.open(username, ios::app);
                 
                 cout << "Input message: ";
                 getline(cin, message);
                 
-                fout << message << endl;
+                fout << "From: " << getUserName() << "\nTo: " << username2;
+                fout << endl << endl << message << endl;
                 
                 fout.close();
                 exit(2);
@@ -264,4 +271,14 @@ void sendMessages()
     }
     cout << "User does not exist.";
     exit(2);
+}
+
+string getUserName()
+{
+    ifstream readFile("temp.txt");
+    string username;
+    
+    getline(readFile, username);
+    
+    return username;
 }
