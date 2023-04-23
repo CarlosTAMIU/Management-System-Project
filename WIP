@@ -10,7 +10,7 @@ void getChoice(int& choice, int limit);
 string get_line(ifstream& file, int line_number);
 
 void createAcc();
-void loginUsername(string& tempUsername, string& tempAuthority);
+void loginUsername(string& tempUsername, string& tempPassword, string& tempAuthority);
 void loginPassword(string tempPassword);
 void incorrectPassword(string tempPassword);
 
@@ -24,7 +24,7 @@ void inbox(string tempUsername);
 
 
 int main()
-{	
+{
 	ofstream accountsFile;
 	accountsFile.open("accounts.txt", ios::app);
 	if (accountsFile.fail())
@@ -36,53 +36,62 @@ int main()
 	adminCheck();
 	showMenu();
 	cout << "\nPlease Select an Option From the Menu: ";
-	string username;
-	string authority;
+
+	string username, password, authority;
 	int userInput;
 	getChoice(userInput, 3);
-	
+
 	switch (userInput)
 	{
 	case 1:
-		cout << "Create Account.\n";
+		cout << "Create Account." << endl;
 		createAcc();
-		break; 
+		break;
 	case 2:
-		cout << "Log In.\n";
-		loginUsername(username, authority);
-		break; 
+		cout << "Log In." << endl;
+		loginUsername(username, password, authority);
+		break;
 	case 3:
-		cout << "Exit.\n";
+		cout << "Exit." << endl;
 		cout << "\nGoodbye!\n\n";
 		exit(3);
 	}
-	
+
 	mainMenu(username, authority);
 	getChoice(userInput, 5);
-	
-	switch(userInput)
+
+	switch (userInput)
 	{
-	    case 1:
-	    cout << "Profile." << endl;
-	    profile(username, "testing", authority);
-	    break;
-	    
-	    case 2:
-	    cout << "Schedule." << endl;
-	    break; //Replace with schedule function
-	    
-	    case 3:
-	    cout << "Message." << endl;
-	    sendMessages(username);
-	    break;
-	    
-	    case 4:
-	    cout << "Inbox." << endl;
-	    inbox(username);
-	    break;
-	    
-	    case 5:
-	    break; //Replace with if-statement
+	case 1:
+		cout << "Profile." << endl;
+		profile(username, password, authority);
+		break;
+
+	case 2:
+		cout << "Schedule." << endl;
+		//Replace with schedule function
+		break; 
+
+	case 3:
+		cout << "Message." << endl;
+		sendMessages(username);
+		break;
+
+	case 4:
+		cout << "Inbox." << endl;
+		inbox(username);
+		break;
+
+	case 5:
+		if(authority == "1")
+		{
+		    cout << "Manage." << endl; //Insert manage function
+		    exit(233);
+		}
+		else
+		    cout << "Invalid option.";
+		    getChoice(userInput, 5);
+		break;
 	}
 
 	accountsFile.close();
@@ -102,8 +111,8 @@ void showMenu()
 void getChoice(int& choice, int limit)
 {
 	cin >> choice;
-	
-	while (cin.fail()) 
+
+	while (cin.fail())
 	{
 		cin.clear();
 		cin.ignore(100, '\n');
@@ -111,15 +120,15 @@ void getChoice(int& choice, int limit)
 		cin >> choice;
 
 		if (!(cin.fail()))
-		if ((choice < 1) || (limit < choice)) 
-		{
-			cout << "Invalid Choice, Please Select a Valid Option: ";
-			cin.clear();
-			cin.ignore(100, '\n');
-			cin >> choice;
-		}
+			if ((choice < 1) || (limit < choice))
+			{
+				cout << "Invalid Choice, Please Select a Valid Option: ";
+				cin.clear();
+				cin.ignore(100, '\n');
+				cin >> choice;
+			}
 	}
-	
+
 	cout << "\nYour Choice was " << choice << ": ";
 	cin.ignore();
 }
@@ -188,7 +197,7 @@ void createAcc()
 	cout << "Successfully created account." << endl;
 }
 
-void loginUsername(string& tempUsername, string& tempAuthority)
+void loginUsername(string& tempUsername, string& tempPassword, string& tempAuthority)
 {
 	ifstream accountsFile;
 	accountsFile.open("accounts.txt");
@@ -198,7 +207,6 @@ void loginUsername(string& tempUsername, string& tempAuthority)
 		exit(1);
 	}
 
-	string tempPassword;
 	int lineNumber = 0;
 	string userInput;
 
@@ -221,7 +229,7 @@ void loginUsername(string& tempUsername, string& tempAuthority)
 	}
 	cout << "User does not exist, try again.\n";
 	accountsFile.close();
-	loginUsername(tempUsername, tempAuthority);
+	loginUsername(tempUsername, tempPassword, tempAuthority);
 }
 
 void loginPassword(string tempPassword)
@@ -234,7 +242,7 @@ void loginPassword(string tempPassword)
 	if (userInput == tempPassword)
 	{
 		cout << "Successfully logged in!";
-		return; 
+		return;
 	}
 	else
 		incorrectPassword(tempPassword);
@@ -291,7 +299,7 @@ void adminCheck()
 		if (temp == "admin")
 			return;
 	}
-		accountsFile << "admin" << endl << "123456" << endl << "1" << endl;
+	accountsFile << "admin" << endl << "123456" << endl << "1" << endl;
 }
 
 void sendMessages(string tempUsername)
@@ -335,52 +343,52 @@ void sendMessages(string tempUsername)
 
 void mainMenu(string username, string authority)
 {
-    cout<<"\n=================Monkey Bussines================="<<endl
-    << " User: " << username <<endl
-    <<"-------------------------------------------------"<<endl
-    <<"|Profile  [1]|"<<endl
-    <<"|Schedule [2]|"<<endl
-    <<"|Messages [3]|"<<endl
-    <<"|Inbox    [4]|"<<endl;
-    
-    if (authority == "1")
-        cout <<"|Manage   [5]|"<<endl;
-        
-    cout << "|Input: ";
-        
-    return;
+	cout << "\n=================Monkey Bussines=================" << endl
+		<< " User: " << username << endl
+		<< "-------------------------------------------------" << endl
+		<< "|Profile  [1]|" << endl
+		<< "|Schedule [2]|" << endl
+		<< "|Messages [3]|" << endl
+		<< "|Inbox    [4]|" << endl;
+
+	if (authority == "1")
+		cout << "|Manage   [5]|" << endl;
+
+	cout << "|Input: ";
+
+	return;
 }
 
-void inbox (string tempUsername)
+void inbox(string tempUsername)
 {
-    string contents;
-    ifstream inbox;
-    
-    cout << endl << tempUsername << "'s Inbox: " << endl << endl;
-    
-    tempUsername += ".txt";
-    
-    inbox.open(tempUsername);
-    if(inbox.fail())
-    {
-        cout << "Inbox Empty: No messages.";
-    }
-    
-    while (getline(inbox, contents))
-    {
-        cout << contents << endl;
-    }
+	string contents;
+	ifstream inbox;
+
+	cout << endl << tempUsername << "'s Inbox: " << endl << endl;
+
+	tempUsername += ".txt";
+
+	inbox.open(tempUsername);
+	if (inbox.fail())
+	{
+		cout << "Inbox Empty: No messages.";
+	}
+
+	while (getline(inbox, contents))
+	{
+		cout << contents << endl;
+	}
 }
 
-void profile (string tempUsername, string tempPassword, string tempAuthority)
+void profile(string tempUsername, string tempPassword, string tempAuthority)
 {
-    cout<<"=================Monkey Bussines================="<<endl
-    <<"|(USER NAME)                   Return To Menu[9]|"<<endl
-    <<"-------------------------------------------------"<<endl
-    <<"|Profile  [*]| Username: "<< tempUsername << endl
-    <<"|Schedule [ ]| Password: "<< tempPassword << endl
-    <<"|Messages [ ]| Address:"<< endl
-    <<"|Inbox    [ ]|                     Edit[7]Save[8]"<<endl;
-    
-    
+	cout << "=================Monkey Bussines=================" << endl
+		<< "User: : " << tempUsername << "      Return To Menu[9]|" << endl
+		<< "-------------------------------------------------" << endl
+		<< "|Profile  [*]| Username: " << tempUsername << endl
+		<< "|Schedule [ ]| Password: " << tempPassword << endl
+		<< "|Messages [ ]| " << endl
+		<< "|Inbox    [ ]|                     Edit[7]Save[8]" << endl;
+
+
 }
