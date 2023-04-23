@@ -7,22 +7,30 @@ using namespace std;
 
 void showMenu();
 void getChoice(int& choice, int limit);
-
+string get_line(ifstream& file, int line_number);
 void createAcc();
-void loginUsername(string& tempUsername);
+void loginUsername(string& tempUsername, string& authority);
 void loginPassword(string tempPassword);
 void incorrectPassword(string tempPassword);
-void sendMessages();
 void adminCheck();
-
+void sendMessages(string tempUsername);
+int mainMenu(string username, string authority);
 
 int main()
-{
-	
+{	
+	ofstream accountsFile;
+	accountsFile.open("accounts.txt", ios::app);
+	if (accountsFile.fail())
+	{
+		cout << "Output file failed to open.";
+		exit(1);
+	}
+
 	adminCheck();
 	showMenu();
 	cout << "\nPlease Select an Option From the Menu: ";
 	string username;
+	string authority;
 	int userInput;
 	getChoice(userInput, 3);
 	
@@ -31,16 +39,21 @@ int main()
 	case 1:
 		cout << "Create Account.\n";
 		createAcc();
-		break; //can go into main menu from here if wanted.
+		break; 
 	case 2:
 		cout << "Log In.\n";
-		loginUsername(username);
-		break; // same ^.
+		loginUsername(username, authority);
+		break; 
 	case 3:
 		cout << "Exit.\n";
 		cout << "\nGoodbye!\n\n";
 		exit(3);
 	}
+
+
+
+
+	accountsFile.close();
 	return 0;
 }
 
@@ -71,6 +84,21 @@ void getChoice(int& choice, int limit)
 	}
 	cout << "\nYour Choice was " << choice << ": ";
 	cin.ignore();
+}
+
+string get_line(ifstream& file, int line_number) {
+	string line;
+	int current_line = 0;
+	file.seekg(0, ios::beg);
+	while (current_line < line_number && getline(file, line)) {
+		current_line++;
+	}
+	if (current_line == line_number) {
+		return line;
+	}
+	else {
+		return "failed to get line";
+	}
 }
 
 void createAcc()
@@ -122,7 +150,7 @@ void createAcc()
 	cout << "Successfully created account." << endl;
 }
 
-void loginUsername(string& tempUsername)
+void loginUsername(string& tempUsername, string& tempAuthority)
 {
 	ifstream accountsFile;
 	accountsFile.open("accounts.txt");
@@ -146,19 +174,16 @@ void loginUsername(string& tempUsername)
 		if (lineNumber % 3 == 1)
 			if (tempUsername == userInput)
 			{
-				accountsFile.seekg(0, ios::beg);
-				for (int i = 1; i <= lineNumber + 1; i++)
-				{
-					getline(accountsFile, tempPassword);
-				}
+				tempPassword = get_line(accountsFile, lineNumber + 1);
+				tempAuthority = get_line(accountsFile, lineNumber + 2);
 				loginPassword(tempPassword);
 				accountsFile.close();
-				exit(2);
+				return;
 			}
 	}
 	cout << "User does not exist, try again.\n";
 	accountsFile.close();
-	loginUsername(tempUsername);
+	loginUsername(tempUsername, tempAuthority);
 }
 
 void loginPassword(string tempPassword)
@@ -171,7 +196,7 @@ void loginPassword(string tempPassword)
 	if (userInput == tempPassword)
 	{
 		cout << "Successfully logged in!";
-		exit(2); //Replace with main menu function call.
+		return; 
 	}
 	else
 		incorrectPassword(tempPassword);
@@ -228,40 +253,78 @@ void adminCheck()
 		if (temp == "admin")
 			return;
 	}
-		accountsFile << "admin" << endl << "123456" << endl << "1";
+		accountsFile << "admin" << endl << "123456" << endl << "1" << endl;
 }
 
-void sendMessages()
+void sendMessages(string tempUsername)
 {
-	ifstream fin("accounts.txt");
-	ofstream fout;
-	string input, message, username;
+	ifstream accountsFile("accounts.txt");
+	ofstream messageFile;
+	string input, message, username, temp;
 	int lineNumber = 0;
 
-	cout << "Input the username of the reciever: ";
+	cout << "Input the username of the receiver: ";
 	getline(cin, username);
 
-	while (getline(fin, input))
+	while (getline(accountsFile, input))
 	{
 		lineNumber++;
 
-		if (lineNumber % 2 == 1)
+		if (lineNumber % 3 == 1)
 		{
 			if (input == username)
 			{
+				temp = username;
 				username += ".txt";
-				fout.open(username, ios::app);
+				messageFile.open(username, ios::app);
 
 				cout << "Input message: ";
 				getline(cin, message);
 
-				fout << message << endl;
+				messageFile << "From: " << tempUsername << endl;
+				messageFile << "To: " << temp << endl << endl;
 
-				fout.close();
+				messageFile << message << endl;
+
+				messageFile.close();
 				exit(2);
 			}
 		}
 	}
 	cout << "User does not exist.";
 	exit(2);
+}
+
+int mainMenu(string username, string authority)
+{
+	int lineNum = 0;
+	string tempNum;
+	ifstream authorityCheck("accounts.txt");
+
+	authorityCheck.seekg(0, ios::beg);
+	while (getline(authorityCheck, tempNum))
+	{
+		lineNum++;
+		if (lineNum % 3 == 1)
+			if (tempNum == username)
+			{
+				authorityCheck.seekg(0, ios::beg);
+				for (int i = 1; i <= lineNum + 2; i++)
+				{
+					getline(authorityCheck, tempNum);
+					if (tempNum == "1")
+					{
+						cout << "admin";
+
+					}
+					if (tempNum == "0")
+					{
+						cout << "guest";
+
+					}
+				}
+			}
+	}
+
+	return 3;
 }
