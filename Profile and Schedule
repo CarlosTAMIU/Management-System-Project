@@ -1,0 +1,52 @@
+void adminMenu(){
+cout<<"=================Monkey Bussines================="<<endl
+    <<"|(USER NAME)                                    |"<<endl
+    <<"-------------------------------------------------"<<endl
+    <<"|Profile  [1]|"<<endl
+    <<"|Schedule [2]|"<<endl
+    <<"|Messages [3]|"<<endl
+    <<"|Inbox    [4]|"<<endl
+    <<"|Manage   [5]|"<<endl;
+}
+
+void  mainMenu(){
+cout<<"=================Monkey Bussines================="<<endl
+    <<"|(USER NAME)                                    |"<<endl
+    <<"-------------------------------------------------"<<endl
+    <<"|Profile  [1]|"<<endl
+    <<"|Schedule [2]|"<<endl
+    <<"|Messages [3]|"<<endl
+    <<"|Inbox    [4]|"<<endl;
+
+}
+
+void profile(){
+cout<<"=================Monkey Bussines================="<<endl
+    <<"|(USER NAME)                   Return To Menu[9]|"<<endl
+    <<"-------------------------------------------------"<<endl
+    <<"|Profile  [*]| Username: "<<(username)<<endl
+    <<"|Schedule [ ]| Password: "<<(password)<<endl
+    <<"|Messages [ ]| Address:<<endl
+    <<"|Inbox    [ ]|                     Edit[7]Save[8]"<<endl;
+    
+    // lets user check thier profile and lets them edit but they must save before they exit
+    // same for admin
+    
+}
+
+void schedule(){
+cout<<"=================Monkey Bussines================="<<endl
+    <<"|(USER NAME)                   Return To Menu[9]|"<<endl
+    <<"-------------------------------------------------"<<endl
+    <<"|Profile  [ ]| Monday: "<<(milatarytime monday)<<endl
+    <<"|Schedule [*]| Tusday: "<<(milatarytime tusday)<<endl
+    <<"|Messages [ ]| Wensday: "<<(milatarytime wensday)<<endl
+    <<"|Inbox    [ ]| Thursday: "<<(milatarytime thursday)<<endl
+    <<"|            | Friday: "<<(milatatytime friday)<<endl;
+    
+    //  just displays the times that you are working
+
+}
+
+
+
