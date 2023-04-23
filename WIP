@@ -68,7 +68,7 @@ int main()
 	    break;
 	    
 	    case 4:
-	    //inbox(username);
+	    inbox(username);
 	    break;
 	    
 	    case 5:
@@ -341,3 +341,23 @@ int mainMenu(string username, string authority)
     return choice;
 }
 
+void inbox (string tempUsername)
+{
+    string contents;
+    ifstream inbox;
+    
+    cout << endl << tempUsername << "'s Inbox: " << endl << endl;
+    
+    tempUsername += ".txt";
+    
+    inbox.open(tempUsername);
+    if(inbox.fail())
+    {
+        cout << endl << "Inbox Empty: No messages.";
+    }
+    
+    while (getline(inbox, contents))
+    {
+        cout << contents << endl;
+    }
+}
