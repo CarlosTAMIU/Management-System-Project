@@ -10,15 +10,17 @@ void getChoice(int& choice, int limit);
 string get_line(ifstream& file, int line_number);
 
 void createAcc();
-void loginUsername(string& tempUsername, string& authority);
+void loginUsername(string& tempUsername, string& tempAuthority);
 void loginPassword(string tempPassword);
 void incorrectPassword(string tempPassword);
 
 void adminCheck();
 
-int mainMenu(string username, string authority);
+void mainMenu(string tempUsernamesername, string tempAuthority);
+void profile(string tempUsername, string tempPassword, string tempAuthority);
 void sendMessages(string tempUsername);
 void inbox(string tempUsername);
+
 
 
 int main()
@@ -55,19 +57,27 @@ int main()
 		exit(3);
 	}
 	
-	switch(mainMenu(username, authority))
+	mainMenu(username, authority);
+	getChoice(userInput, 5);
+	
+	switch(userInput)
 	{
 	    case 1:
-	    break; //Replace with profile function
+	    cout << "Profile." << endl;
+	    profile(username, "testing", authority);
+	    break;
 	    
 	    case 2:
+	    cout << "Schedule." << endl;
 	    break; //Replace with schedule function
 	    
 	    case 3:
+	    cout << "Message." << endl;
 	    sendMessages(username);
 	    break;
 	    
 	    case 4:
+	    cout << "Inbox." << endl;
 	    inbox(username);
 	    break;
 	    
@@ -92,18 +102,24 @@ void showMenu()
 void getChoice(int& choice, int limit)
 {
 	cin >> choice;
-	while (cin.fail()) {
+	
+	while (cin.fail()) 
+	{
 		cin.clear();
-		cin.ignore();
+		cin.ignore(100, '\n');
 		cout << "Invalid input. Please enter an integer: ";
 		cin >> choice;
+
+		if (!(cin.fail()))
+		if ((choice < 1) || (limit < choice)) 
+		{
+			cout << "Invalid Choice, Please Select a Valid Option: ";
+			cin.clear();
+			cin.ignore(100, '\n');
+			cin >> choice;
+		}
 	}
-	while ((choice < 1) || (limit < choice)) {
-		cout << "Invalid Choice, Please Select a Valid Option: ";
-		cin.clear();
-		cin.ignore();
-		cin >> choice;
-	}
+	
 	cout << "\nYour Choice was " << choice << ": ";
 	cin.ignore();
 }
@@ -317,12 +333,10 @@ void sendMessages(string tempUsername)
 	exit(2);
 }
 
-int mainMenu(string username, string authority)
+void mainMenu(string username, string authority)
 {
-    int choice;
-    
     cout<<"\n=================Monkey Bussines================="<<endl
-    <<"|(User Name)                                    |"<<endl
+    << " User: " << username <<endl
     <<"-------------------------------------------------"<<endl
     <<"|Profile  [1]|"<<endl
     <<"|Schedule [2]|"<<endl
@@ -332,13 +346,9 @@ int mainMenu(string username, string authority)
     if (authority == "1")
         cout <<"|Manage   [5]|"<<endl;
         
-    cout << "Input: ";
-    
-    cin.clear();
-	cin >> choice;
-	cin.ignore();
-    
-    return choice;
+    cout << "|Input: ";
+        
+    return;
 }
 
 void inbox (string tempUsername)
@@ -353,11 +363,24 @@ void inbox (string tempUsername)
     inbox.open(tempUsername);
     if(inbox.fail())
     {
-        cout << endl << "Inbox Empty: No messages.";
+        cout << "Inbox Empty: No messages.";
     }
     
     while (getline(inbox, contents))
     {
         cout << contents << endl;
     }
+}
+
+void profile (string tempUsername, string tempPassword, string tempAuthority)
+{
+    cout<<"=================Monkey Bussines================="<<endl
+    <<"|(USER NAME)                   Return To Menu[9]|"<<endl
+    <<"-------------------------------------------------"<<endl
+    <<"|Profile  [*]| Username: "<< tempUsername << endl
+    <<"|Schedule [ ]| Password: "<< tempPassword << endl
+    <<"|Messages [ ]| Address:"<< endl
+    <<"|Inbox    [ ]|                     Edit[7]Save[8]"<<endl;
+    
+    
 }
