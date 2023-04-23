@@ -19,11 +19,11 @@ void adminCheck();
 int main()
 {
 	int userInput;
-
+	adminCheck();
 	showMenu();
 	cout << "\nPlease Select an Option From the Menu: ";
 	getChoice(userInput, 3);
-
+	
 	switch (userInput)
 	{
 	case 1:
@@ -61,7 +61,7 @@ void getChoice(int& choice, int limit)
 		cout << "Invalid input. Please enter an integer: ";
 		cin >> choice;
 	}
-	while ((choice<1) || (limit<choice)) {
+	while ((choice < 1) || (limit < choice)) {
 		cout << "Invalid Choice, Please Select a Valid Option: ";
 		cin.clear();
 		cin.ignore();
@@ -99,7 +99,7 @@ void createAcc()
 	while (getline(usernameCheck, tempUsername))
 	{
 		lineNumber++;
-		if (lineNumber % 2 == 1)
+		if (lineNumber % 3 == 1)
 			if (tempUsername == userInput)
 			{
 				cout << "\nThis username is already taken, please try again.\n";
@@ -110,9 +110,11 @@ void createAcc()
 	}
 	accountsFile << userInput << endl;
 
-	cout << "1Input password: ";
+	cout << "Input password: ";
 	getline(cin, userInput);
 	accountsFile << userInput << endl;
+
+	accountsFile << "0" << endl;
 
 	accountsFile.close();
 	usernameCheck.close();
@@ -128,7 +130,7 @@ void loginUsername()
 		cout << "Input file failed to open.";
 		exit(1);
 	}
-	
+
 	string tempUsername;
 	string tempPassword;
 	int lineNumber = 0;
@@ -137,13 +139,13 @@ void loginUsername()
 	cout << "Input username: ";
 	getline(cin, userInput);
 
-	accountsFile.seekg(0,ios::beg);
+	accountsFile.seekg(0, ios::beg);
 	while (getline(accountsFile, tempUsername))
 	{
 		lineNumber++;
-		if (lineNumber % 2 == 1)
+		if (lineNumber % 3 == 1)
 			if (tempUsername == userInput)
-			{	
+			{
 				accountsFile.seekg(0, ios::beg);
 				for (int i = 1; i <= lineNumber + 1; i++)
 				{
@@ -173,7 +175,7 @@ void loginPassword(string tempPassword)
 		exit(2); //Replace with main menu function call.
 	}
 	else
-	incorrectPassword(tempPassword);
+		incorrectPassword(tempPassword);
 }
 
 void incorrectPassword(string tempPassword)
@@ -185,7 +187,7 @@ void incorrectPassword(string tempPassword)
 		"[3] Exit." << endl;
 
 	getChoice(choice, 3);
-	
+
 	switch (choice)
 	{
 	case 1:
@@ -204,14 +206,16 @@ void incorrectPassword(string tempPassword)
 
 void adminCheck()
 {
-	ifstream usernamesFile("accounts.txt");
+	ifstream usernamesFile;
+	usernamesFile.open("accounts.txt");
 	if (usernamesFile.fail())
 	{
 		cout << "Input file failed to open.";
 		exit(4);
 	}
 
-	ofstream accountsFile("accounts.txt", ios::app);
+	ofstream accountsFile;
+	accountsFile.open("accounts.txt", ios::app);
 	if (accountsFile.fail())
 	{
 		cout << "Output file failed to open.";
@@ -223,10 +227,7 @@ void adminCheck()
 	while (getline(usernamesFile, temp))
 	{
 		if (temp == "admin")
-		{
 			return;
-		}
 	}
-	accountsFile << "admin" << endl << "123456" << endl << "1";
-
+		accountsFile << "admin" << endl << "123456" << endl << "1";
 }
