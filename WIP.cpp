@@ -9,7 +9,7 @@ void showMenu();
 void getChoice(int& choice, int limit);
 string get_line(ifstream& file, int line_number);
 
-void createAcc();
+void createAcc(string& tempUsername, string& tempPassword, string& tempAuthority);
 void loginUsername(string& tempUsername, string& tempPassword, string& tempAuthority);
 void loginPassword(string tempPassword);
 void incorrectPassword(string tempPassword);
@@ -21,6 +21,9 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority);
 void sendMessages(string tempUsername);
 void inbox(string tempUsername);
 void schedule(string username, string authority);
+
+void manage(string username);
+
 
 
 int main()
@@ -45,7 +48,7 @@ int main()
 	{
 	case 1:
 		cout << "Create Account." << endl;
-		createAcc();
+		createAcc(username, password, authority);
 		break;
 	case 2:
 		cout << "Log In." << endl;
@@ -86,7 +89,8 @@ int main()
 		if (authority == "1")
 		{
 			cout << "Manage." << endl; //Insert manage function
-			exit(233);
+			manage(username);
+			break;
 		}
 		else
 			cout << "Invalid option.";
@@ -148,7 +152,7 @@ string get_line(ifstream& file, int line_number) {
 	}
 }
 
-void createAcc()
+void createAcc(string& tempUsername, string& tempPassword, string& tempAuthority)
 {
 	ofstream accountsFile;
 	accountsFile.open("accounts.txt", ios::app);
@@ -166,9 +170,10 @@ void createAcc()
 	}
 
 	string userInput;
-	string tempUsername;
 	int lineNumber = 0;
-
+	tempAuthority = "0";
+	tempPassword = "placeholder";
+	
 	cout << "Input username: ";
 	getline(cin, userInput);
 
@@ -180,18 +185,21 @@ void createAcc()
 			if (tempUsername == userInput)
 			{
 				cout << "\nThis username is already taken, please try again.\n";
+				
 				accountsFile.close();
 				usernameCheck.close();
-				createAcc();
+				createAcc(tempUsername, tempPassword, tempAuthority);
 				return;
 			}
 	}
 	accountsFile << userInput << endl;
-
+	tempUsername = userInput;
 	cout << "Input password: ";
 	getline(cin, userInput);
 	accountsFile << userInput << endl << "0" << endl;
-
+	tempPassword = userInput;
+	tempAuthority = "0";
+	
 	accountsFile.close();
 	usernameCheck.close();
 	cout << "Successfully created account." << endl;
@@ -321,6 +329,7 @@ void sendMessages(string tempUsername)
 	cout << "Input the username of the receiver: ";
 	getline(cin, username);
 
+
 	while (getline(accountsFile, input))
 	{
 		lineNumber++;
@@ -391,7 +400,13 @@ void inbox(string tempUsername)
 
 void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 {
-	int choice;
+
+	ifstream fin("accounts.txt");
+	ofstream fout("accounts.txt", ios::app);
+
+	string line, replacement;
+
+	int choice, lineNumber = 0;
 
 	if (tempAuthority == "1")
 	{
@@ -400,9 +415,10 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 			<< "-------------------------------------------------" << endl
 			<< "|Profile  [*]| Username: " << tempUsername << endl
 			<< "|Schedule [ ]| Password: " << tempPassword << endl
-			<< "|Messages [ ]| " << endl
-			<< "|Inbox    [ ]|" << endl
-			<< "|Manage   [ ]|                     Edit[1]Back[2]" << endl;
+			<< "|Messages [ ]| Hours: " << endl
+			<< "|Inbox    [ ]| Salary: " << endl
+			<< "|Manage   [ ]|                            Back[2]" << endl
+			<< "|Input : ";
 	}
 	else
 	{
@@ -412,55 +428,103 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 			<< "|Profile  [*]| Username: " << tempUsername << endl
 			<< "|Schedule [ ]| Password: " << tempPassword << endl
 			<< "|Messages [ ]| " << endl
-			<< "|Inbox    [ ]|                     Edit[1]Back[2]" << endl;
+			<< "|Inbox    [ ]|                            Back[2]" << endl
+			<< "|Input : ";
 	}
 
-	getChoice(choice, 2);
+}
+
+void manage(string username)
+{
+	ifstream accountList("accounts.txt");
+	string line, temp, eName;
+	int lineNum = 0, choice;
+
+	cout << "\n=================Monkey Business=================" << endl
+		<< " User: " << username << endl
+		<< "-------------------------------------------------" << endl
+		<< "|Profile  [ ]| [1] Account list" << endl
+		<< "|Schedule [ ]| [2] Promote" << endl
+		<< "|Messages [ ]| [3] Raise" << endl
+		<< "|Inbox    [ ]|                            Back[4]" << endl
+		<< "|Input : ";
+
+	getChoice(choice, 4);
 
 	switch (choice)
 	{
 	case 1:
-		if (tempAuthority == "1")
-		{
-			cout << "=================Monkey Business=================" << endl
-				<< "User: " << tempUsername << endl
-				<< "-------------------------------------------------" << endl
-				<< "|Profile  [*]| [1] Edit Username: " << tempUsername << endl
-				<< "|Schedule [ ]| [2] Edit Password: " << tempPassword << endl
-				<< "|Messages [ ]| " << endl
-				<< "|Inbox    [ ]| " << endl
-				<< "|Manage   [ ]|                            Back[3]" << endl;
-		}
-		else
-		{
-			cout << "=================Monkey Business=================" << endl
-				<< "User: " << tempUsername << endl
-				<< "-------------------------------------------------" << endl
-				<< "|Profile  [*]| [1] Edit Username: " << tempUsername << endl
-				<< "|Schedule [ ]| [2] Edit Password: " << tempPassword << endl
-				<< "|Messages [ ]| " << endl
-				<< "|Inbox    [ ]|                            Back[3]" << endl;
-		}
+		lineNum = 0;
+		cout << "Account list.\n";
 
-		getChoice(choice, 3);
+		cout << "\n=================Monkey Business=================" << endl
+			<< " User: " << username << endl
+			<< "-------------------------------------------------" << endl
+			<< "| Account List |" << endl;
 
-			switch (choice)
+		accountList.seekg(0, ios::beg);
+		while (getline(accountList, line))
+		{
+			lineNum++;
+
+			if (lineNum % 3 == 1)
 			{
-			case 1:
-
-
-			case 2:
-
-
-			case 3:
-				profile(tempUsername, tempPassword, tempAuthority);
-				break;
+				cout << line << endl;
 			}
+		}
+
+
+		break;
 
 	case 2:
-		mainMenu(tempUsername, tempAuthority);
+		lineNum = 0;
+		cout << "Promote. \n";
+		
+		cout << "\n=================Monkey Business=================" << endl
+			<< " User: " << username << endl
+			<< "-------------------------------------------------" << endl
+			<< "| Promote " << endl
+			<< "| Enter employee username." << endl
+			<< "| Input: ";
+
+		getline(cin, eName);
+
+		accountList.seekg(0, ios::beg);
+		while (getline(accountList, line))
+		{
+			lineNum++;
+
+			if (lineNum % 3 == 1)
+			{
+				if (line == eName)
+				{
+					accountList.seekg(0, ios::beg);
+					for (int i = 0; i < lineNum + 2; i++)
+					{
+						getline(accountList, line);
+					}
+					
+					if (line == "0")
+					{
+
+					}
+					else
+					{
+						cout << "This user is already an admin." << endl;
+					}
+				}
+			}
+		}
 		break;
+
+	case 3:
+		cout << "Raise. \n";
+
+	case 4:
+		cout << "Back. \n";
+		return;
 	}
+
 }
 
 void schedule(string username, string authority) {
@@ -477,7 +541,7 @@ void schedule(string username, string authority) {
 			<< "|Messages [ ]|	to	to	to	to	to	to	to	" << endl
 			<< "|Inbox    [ ]|	5pm	5pm	5pm	5pm	5pm	4pm	4pm	" << endl
 			<< "|Manage   [ ]|-----------------------------------------------------------" << endl
-			<< "              				Edit[1]Back[2]" << endl;
+			<< "							Edit[1]Back[2]" << endl;
 	}
 	else
 	{
