@@ -17,7 +17,7 @@ void incorrectPassword(string tempPassword);
 void adminCheck();
 
 void mainMenu(string tempUsernamesername, string tempAuthority);
-void profile(string tempUsername, string tempPassword, string tempAuthority);
+void profile(string& tempUsername, string& tempPassword, string tempAuthority);
 void sendMessages(string tempUsername);
 void inbox(string tempUsername);
 
@@ -380,15 +380,76 @@ void inbox(string tempUsername)
 	}
 }
 
-void profile(string tempUsername, string tempPassword, string tempAuthority)
+void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 {
-	cout << "=================Monkey Bussines=================" << endl
-		<< "User: : " << tempUsername << "      Return To Menu[9]|" << endl
+    int choice;
+    
+	if(tempAuthority == 1)
+	{
+	    cout << "=================Monkey Bussines=================" << endl
+		<< "User: " << tempUsername << endl
 		<< "-------------------------------------------------" << endl
 		<< "|Profile  [*]| Username: " << tempUsername << endl
 		<< "|Schedule [ ]| Password: " << tempPassword << endl
 		<< "|Messages [ ]| " << endl
-		<< "|Inbox    [ ]|                     Edit[7]Save[8]" << endl;
+		<< "|Inbox    [ ]|"<< endl
+		<< "|Manage   [ ]|                     Edit[1]Back[2]"<< endl
+	}
+	else
+	{
+	    cout << "=================Monkey Bussines=================" << endl
+		<< "User: " << tempUsername << endl
+		<< "-------------------------------------------------" << endl
+		<< "|Profile  [*]| Username: " << tempUsername << endl
+		<< "|Schedule [ ]| Password: " << tempPassword << endl
+		<< "|Messages [ ]| " << endl
+		<< "|Inbox    [ ]|                     Edit[1]Back[2]" << endl;
+	}
+	
+	getChoice(choice, 2);
+	
+	switch (choice)
+	{
+	    case 1:
+	    if(tempAuthority == 1)
+	    {
+	        cout << "=================Monkey Bussines=================" << endl
+	    	<< "User: " << tempUsername << endl
+		    << "-------------------------------------------------" << endl
+    		<< "|Profile  [*]| [1] Edit Username: " << tempUsername << endl
+    		<< "|Schedule [ ]| [2] Edit Password: " << tempPassword << endl
+    		<< "|Messages [ ]| " << endl
+    		<< "|Inbox    [ ]| " << endl
+    		<< "|Manage   [ ]|                            Back[3]"<< endl
+	    }
+	    else
+	    {
+	        cout << "=================Monkey Bussines=================" << endl
+	    	<< "User: " << tempUsername << endl
+	    	<< "-------------------------------------------------" << endl
+	    	<< "|Profile  [*]| [1] Edit Username: " << tempUsername << endl
+	    	<< "|Schedule [ ]| [2] Edit Password: " << tempPassword << endl
+	    	<< "|Messages [ ]| " << endl
+	    	<< "|Inbox    [ ]|                            Back[3]" << endl;
+	    }
+	    
+	    getChoice(choice, 3)
+	    
+	    switch(choice)
+	    {
+	        case 1:
+	        
+	        case 2:
+	        
+	        case 3:
+	        profile (tempUsername, tempPassword, tempAuthority);
+	        break;
+	    }
+	    
+	    case 2:
+	    mainMenu(tempUsername, tempAuthority);
+	    break;
+	}
 
 
 }
