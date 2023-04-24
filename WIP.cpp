@@ -293,13 +293,22 @@ void adminCheck()
 	}
 
 	string temp;
-
+	int lineNumber = 0;
+	usernamesFile.seekg(0, ios::beg);
 	while (getline(usernamesFile, temp))
 	{
-		if (temp == "admin")
-			return;
+		lineNumber++;
+		if (lineNumber % 3 == 0)
+			if (temp == "1")
+			{
+				usernamesFile.close();
+				accountsFile.close();
+				return;
+			}
 	}
 	accountsFile << "admin" << endl << "123456" << endl << "1" << endl;
+	accountsFile.close();
+	usernamesFile.close();
 }
 
 void sendMessages(string tempUsername)
