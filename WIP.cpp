@@ -20,7 +20,7 @@ void mainMenu(string tempUsernamesername, string tempAuthority);
 void profile(string& tempUsername, string& tempPassword, string tempAuthority);
 void sendMessages(string tempUsername);
 void inbox(string tempUsername);
-
+void schedule(string username, string authority);
 
 
 int main()
@@ -69,7 +69,7 @@ int main()
 
 	case 2:
 		cout << "Schedule." << endl;
-		//Replace with schedule function
+		schedule(username, authority);
 		break;
 
 	case 3:
@@ -461,4 +461,37 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 		mainMenu(tempUsername, tempAuthority);
 		break;
 	}
+}
+
+void schedule(string username, string authority) {
+
+	int choice;
+
+	if (authority == "1")
+	{
+		cout << "=========================Monkey Business================================" << endl
+			<< "User: " << username << endl
+			<< "-------------------------------------------------------------------------" << endl
+			<< "|Profile  [ ]|	M	T	W	R	F	S	U	" << endl
+			<< "|Schedule [*]|	9am	9am	9am	9am	9am	10am	10am" << endl
+			<< "|Messages [ ]|	to	to	to	to	to	to	to	" << endl
+			<< "|Inbox    [ ]|	5pm	5pm	5pm	5pm	5pm	4pm	4pm	" << endl
+			<< "|Manage   [ ]|-----------------------------------------------------------" << endl
+			<< "              				Edit[1]Back[2]" << endl;
+	}
+	else
+	{
+		cout << "=========================Monkey Business================================" << endl
+			<< "User: " << username << endl
+			<< "-------------------------------------------------------------------------" << endl
+			<< "|Profile  [ ]|	M	T	W	R	F	S	U	" << endl
+			<< "|Schedule [*]|	9am	9am	9am	9am	9am	10am	10am" << endl
+			<< "|Messages [ ]|	to	to	to	to	to	to	to	" << endl
+			<< "|Inbox    [ ]|	5pm	5pm	5pm	5pm	5pm	4pm	4pm	" << endl
+			<< "-------------------------------------------------------------------------" << endl
+			<< "							Edit[1]Back[2]" << endl;
+	}
+
+
+
 }
