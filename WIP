@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
-#include <cstdlib>
+#include <cstdliuss>
 using namespace std;
 
 void showMenu();
@@ -343,7 +343,7 @@ void sendMessages(string tempUsername)
 
 void mainMenu(string username, string authority)
 {
-	cout << "\n=================Monkey Bussines=================" << endl
+	cout << "\n=================Monkey Business=================" << endl
 		<< " User: " << username << endl
 		<< "-------------------------------------------------" << endl
 		<< "|Profile  [1]|" << endl
@@ -386,7 +386,7 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
     
 	if(tempAuthority == 1)
 	{
-	    cout << "=================Monkey Bussines=================" << endl
+	    cout << "=================Monkey Business=================" << endl
 		<< "User: " << tempUsername << endl
 		<< "-------------------------------------------------" << endl
 		<< "|Profile  [*]| Username: " << tempUsername << endl
@@ -397,7 +397,7 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 	}
 	else
 	{
-	    cout << "=================Monkey Bussines=================" << endl
+	    cout << "=================Monkey Business=================" << endl
 		<< "User: " << tempUsername << endl
 		<< "-------------------------------------------------" << endl
 		<< "|Profile  [*]| Username: " << tempUsername << endl
@@ -413,7 +413,7 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 	    case 1:
 	    if(tempAuthority == 1)
 	    {
-	        cout << "=================Monkey Bussines=================" << endl
+	        cout << "=================Monkey Business=================" << endl
 	    	<< "User: " << tempUsername << endl
 		    << "-------------------------------------------------" << endl
     		<< "|Profile  [*]| [1] Edit Username: " << tempUsername << endl
@@ -424,7 +424,7 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 	    }
 	    else
 	    {
-	        cout << "=================Monkey Bussines=================" << endl
+	        cout << "=================Monkey Business=================" << endl
 	    	<< "User: " << tempUsername << endl
 	    	<< "-------------------------------------------------" << endl
 	    	<< "|Profile  [*]| [1] Edit Username: " << tempUsername << endl
@@ -439,7 +439,9 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 	    {
 	        case 1:
 	        
+	        
 	        case 2:
+	        
 	        
 	        case 3:
 	        profile (tempUsername, tempPassword, tempAuthority);
@@ -450,6 +452,4 @@ void profile(string& tempUsername, string& tempPassword, string tempAuthority)
 	    mainMenu(tempUsername, tempAuthority);
 	    break;
 	}
-
-
 }
