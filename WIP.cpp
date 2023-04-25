@@ -499,12 +499,12 @@ void manage(string username)
 		<< "-------------------------------------------------" << endl
 		<< "|Profile  [ ]| [1] Account list" << endl
 		<< "|Schedule [ ]| [2] Promote" << endl
-		<< "|Messages [ ]| [3] Raise" << endl
+		<< "|Messages [ ]|" << endl
 		<< "|Inbox    [ ]|                            Back[4]" << endl
 		<< "|Manage   [*]|" << endl
 		<< "|Input : ";
 
-	getChoice(choice, 4);
+	getChoice(choice, 3);
 
 	switch (choice)
 	{
@@ -571,6 +571,11 @@ void manage(string username)
 					
 					if (line == "0")
 					{
+
+						accountList.seekg((lineNum - 1) * line.length(), ios::beg);// Somehow get this to replace the 0 with a 1!
+						promotion.write("1", 1);
+						cout << "User " << eName << " promoted to admin." << endl;
+						promotion.close();
 						exit(12);
 					}
 					else
@@ -583,9 +588,6 @@ void manage(string username)
 		exit(13);
 
 	case 3:
-		cout << "Raise. \n";
-
-	case 4:
 		cout << "Back. \n";
 		return;
 	}
